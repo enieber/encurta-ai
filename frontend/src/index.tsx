@@ -1,10 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
+import { BrowserRouter } from "react-router";
 
-import { Footer } from "./Footer";
-import { Main } from "./Main";
-import { Menu } from "./Menu";
-
+import { App } from "./App";
 import "./index.css";
 
 const root = document.getElementById("root");
@@ -14,9 +12,7 @@ if (!root) {
 }
 
 ReactDOM.createRoot(root).render(
-  <React.StrictMode>
-    <Menu />
-    <Main />
-    <Footer />
-  </React.StrictMode>,
+  <BrowserRouter>
+    <App />
+  </BrowserRouter>,
 );
