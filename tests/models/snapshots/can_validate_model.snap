@@ -1,0 +1,16 @@
+---
+source: tests/models/routers.rs
+expression: res
+---
+Err(
+    Exec(
+        SqlxError(
+            Database(
+                SqliteError {
+                    code: 1299,
+                    message: "NOT NULL constraint failed: routers.hash",
+                },
+            ),
+        ),
+    ),
+)

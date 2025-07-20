@@ -1,0 +1,13 @@
+---
+source: tests/models/routers.rs
+expression: res
+---
+Ok(
+    Model {
+        created_at: DATE,
+        updated_at: DATE,
+        id: ID
+        link: "https://mapeamento.softwarelivre.tec.br/",
+        hash: "6746943",
+    },
+)

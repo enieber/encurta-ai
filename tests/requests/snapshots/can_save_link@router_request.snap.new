@@ -1,0 +1,14 @@
+---
+source: tests/requests/router.rs
+assertion_line: 56
+expression: saved_routers
+---
+Ok(
+    Model {
+        created_at: DATE,
+        updated_at: DATE,
+        id: ID
+        link: "https://mapeamento.softwarelivre.tec.br/",
+        hash: "6746943",
+    },
+)
