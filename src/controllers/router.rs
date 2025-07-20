@@ -38,7 +38,11 @@ pub async fn add(State(ctx): State<AppContext>, Json(params): Json<RoutersParams
 #[debug_handler]
 pub async fn get_hash(Path(hash): Path<String>, State(ctx): State<AppContext>) -> Result<Response> {    
     let item = routers::Model::find_by_hash(&ctx.db, &hash).await?;
-    format::json(item)
+    let reply = ReplyRouter {
+        link: item.link.clone(),
+        hash: item.hash.clone(),
+    };
+    format::json(reply)
 }
 
 pub fn routes() -> Routes {
