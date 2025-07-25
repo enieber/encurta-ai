@@ -1,3 +1,8 @@
+use axum::body::Body;
+use axum::{
+    http::{header::SET_COOKIE, StatusCode},
+   Json,
+};
 use crate::{
     mailers::auth::AuthMailer,
     models::{
@@ -7,10 +12,11 @@ use crate::{
     views::auth::{CurrentResponse, LoginResponse},
 };
 use axum::debug_handler;
-use loco_rs::prelude::*;
+use loco_rs::prelude::{cookie::Cookie, *};
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::sync::OnceLock;
+use serde_json::json;
 
 pub static EMAIL_DOMAIN_RE: OnceLock<Regex> = OnceLock::new();
 
@@ -143,7 +149,29 @@ async fn login(State(ctx): State<AppContext>, Json(params): Json<LoginParams>) -
         .generate_jwt(&jwt_secret.secret, jwt_secret.expiration)
         .or_else(|_| unauthorized("unauthorized!"))?;
 
-    format::json(LoginResponse::new(&user, &token))
+
+    let cookie = Cookie::build(("auth_token", token.to_string()))
+        .http_only(true) // Cookie HTTP Only
+        .path("/") // Disponível em todo o site
+        .secure(true) // Apenas enviar em conexões HTTPS (recomendado para produção)
+        .same_site(cookie::SameSite::Strict) // Prevenir ataques CSRF
+        .finish();
+    tracing::info!("generate cookie");
+
+    // Criar a resposta JSON
+    let json_response = Json(json!({
+        "message": "Logged in successfully",
+    }));
+
+    let response = Response::builder()
+           .status(StatusCode::OK)
+           .header(SET_COOKIE, cookie.to_string())
+           .header("HX-Redirect", "/dashboard")  // Adiciona o header para o HTMX
+           .body(Body::empty())
+           .unwrap();
+
+    tracing::info!("generate response");
+    Ok(response)
 }
 
 #[debug_handler]

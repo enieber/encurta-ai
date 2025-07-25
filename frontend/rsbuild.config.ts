@@ -1,7 +1,6 @@
 import { defineConfig } from "@rsbuild/core";
 import { pluginReact } from "@rsbuild/plugin-react";
 
-// https://rsbuild.dev/guide/basic/configure-rsbuild
 export default defineConfig({
   plugins: [pluginReact()],
   html: {
@@ -12,12 +11,6 @@ export default defineConfig({
       viewport: 'width=device-width, initial-scale=1',
       'color-scheme': 'light dark',
     },
-    links: [
-      {
-        rel: 'stylesheet',
-        href: 'css/pico.min.css',
-      },
-    ],
   },
   server: {
     proxy: {

@@ -6,6 +6,8 @@ import { Main } from "./Main";
 import { Menu } from "./Menu";
 import { Link } from "./Link";
 import { Home } from "./Home";
+import { Login } from "./Login";
+import { Register } from "./Register";
 
 export const App = () => {
   return (
@@ -13,7 +15,9 @@ export const App = () => {
       <Menu />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/novo" element={<Main />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/dashboard/novo" element={<Main />} />
         <Route path="/link/:hash" element={<Link />} />
       </Routes>
       <Footer />

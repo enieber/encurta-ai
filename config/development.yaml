@@ -97,5 +97,10 @@ auth:
   jwt:
     # Secret key for token generation and verification
     secret: ZlWe53cLJX2pg3pMVvtK
+    location:
+      from: Cookie
+      name: auth_token
+    secure: true       # Se true, só envia em HTTPS
+    http_only: true
     # Token expiration time in seconds
     expiration: 604800 # 7 days

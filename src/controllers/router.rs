@@ -19,7 +19,11 @@ pub struct ReplyRouter {
 }
 
 #[debug_handler]
-pub async fn add(State(ctx): State<AppContext>, Json(params): Json<RoutersParams>) -> Result<Response> {
+pub async fn add(
+    auth: auth::JWT,
+    State(ctx): State<AppContext>,
+    Json(params): Json<RoutersParams>
+) -> Result<Response> {
     let res = routers::Model::save_link(&ctx.db, &params).await;
     match res {
         Ok(item) => {
