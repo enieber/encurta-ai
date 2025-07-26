@@ -6,11 +6,6 @@ export default defineConfig({
   html: {
     favicon: "src/assets/favicon.ico",
     title: "Encurta Ai",
-    meta: {
-      charset: 'utf-8',
-      viewport: 'width=device-width, initial-scale=1',
-      'color-scheme': 'light dark',
-    },
   },
   server: {
     proxy: {
