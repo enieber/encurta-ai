@@ -18,7 +18,7 @@ export const Menu = ({ isAuthed }) => {
            <ul>
             { isAuthed && (<li><a href="/dashboard/novo" className="secondary">Novo Link</a></li>)}
             <li><a href="/link" className="secondary">Links</a></li>
-            { isAuthed && (<button onClick={() => {
+            { isAuthed ? (<button onClick={() => {
               logout()
                 .then(_res => {
                   console.log('logout')
@@ -26,7 +26,12 @@ export const Menu = ({ isAuthed }) => {
                 .catch(err => {
                   console.warn(err)
                 })
-            }}>Logout</button>)}
+            }}>Logout</button>) : (
+              <>
+            <li><a href="/login" className="secondary">Login</a></li>            
+            <li><a href="/register" className="secondary">Register</a></li>
+            </>
+              )}
           </ul>
         </nav>
       </div>

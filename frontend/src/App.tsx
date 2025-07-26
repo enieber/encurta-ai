@@ -18,8 +18,8 @@ export const App = () => {
 
   useEffect(() => {
     verifyAuth()
-      .then(res => {        
-        if (status == 200) {
+      .then(res => {
+        if (res.status == 200) {
           setAuthed(true)
         } else {
           setAuthed(false)
