@@ -90,6 +90,35 @@ async fn verify(State(ctx): State<AppContext>, Path(token): Path<String>) -> Res
     format::json(())
 }
 
+#[debug_handler]
+async fn logout(auth: auth::JWT, State(ctx): State<AppContext>) -> Result<Response> {
+    let user = users::Model::find_by_pid(&ctx.db, &auth.claims.pid).await?;
+
+    let cookie = Cookie::build(("auth_token", String::from("")))
+        .http_only(true) // Cookie HTTP Only
+        .path("/") // Disponível em todo o site
+        .secure(true) // Apenas enviar em conexões HTTPS (recomendado para produção)
+        .same_site(cookie::SameSite::Strict) // Prevenir ataques CSRF
+        .finish();
+    tracing::info!("generate cookie");
+
+    // Criar a resposta JSON
+    let json_response = Json(json!({
+        "message": "Logged in successfully",
+    }));
+
+    let response = Response::builder()
+           .status(StatusCode::OK)
+           .header(SET_COOKIE, cookie.to_string())
+           .header("HX-Redirect", "/login")  // Adiciona o header para o HTMX
+           .body(Body::empty())
+           .unwrap();
+
+    tracing::info!("generate response");
+    Ok(response)
+}
+
+
 /// In case the user forgot his password  this endpoints generate a forgot token
 /// and send email to the user. In case the email not found in our DB, we are
 /// returning a valid request for for security reasons (not exposing users DB
@@ -248,6 +277,7 @@ pub fn routes() -> Routes {
         .add("/register", post(register))
         .add("/verify/{token}", get(verify))
         .add("/login", post(login))
+        .add("/logout", post(logout))
         .add("/forgot", post(forgot))
         .add("/reset", post(reset))
         .add("/current", get(current))
