@@ -1,7 +1,9 @@
+import { useNavigate } from 'react-router'
 import { useState } from 'react';
+import { AuthLayout } from './AuthLayout';
 
 const login = async (username: String, password: String) => {
-  const res = await fetch('/api/auth/login', {
+  return await fetch('/api/auth/login', {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -12,13 +14,13 @@ const login = async (username: String, password: String) => {
       password,
     }),
   });
-  return res.json();
 }
 
 
 export const Login = () => {
   const [loading, setLoading] = useState(false);
-    
+  const navigate = useNavigate();
+  
   function makeLogin(formData) {
     const username = formData.get("username");
     const password = formData.get("password");
@@ -30,7 +32,11 @@ export const Login = () => {
     setLoading(true);
     login(username, password)
       .then(res => {
+        if (res.status == 200) {
+          navigate('/');
+        }
         console.log(res)
+
       })
       .catch(err => {
         console.warn(err)
@@ -41,7 +47,7 @@ export const Login = () => {
   }
 
   return (
-    <main className="container has-table-of-contents page-brand">
+    <AuthLayout>
         <form action={makeLogin}>
           <fieldset>
             <label>
@@ -69,6 +75,6 @@ export const Login = () => {
             {loading ? "Fazendo login…" : "Login"}
         </button>
       </form>
-    </main>
+    </AuthLayout>
   )
 }

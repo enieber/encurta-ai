@@ -1,7 +1,9 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router'
+import { AuthLayout } from './AuthLayout';
 
 const register = async (name: String, email: String, password: String) => {
-  const res = await fetch('/api/auth/register', {
+  return await fetch('/api/auth/register', {
     method: 'POST',
     headers: {
       'Accept': 'application/json',
@@ -13,13 +15,13 @@ const register = async (name: String, email: String, password: String) => {
       password,
     }),
   });
-  return res.json();
 }
 
 
 export const Register = () => {
   const [loading, setLoading] = useState(false);
-    
+  const navigate = useNavigate();
+
   function makeLogin(formData) {
     const email = formData.get("email");
     const name = formData.get("name");
@@ -32,6 +34,9 @@ export const Register = () => {
     setLoading(true);
     register(name, email, password)
       .then(res => {
+        if (res.status == 200) {
+          navigate('/login');
+        }
         console.log(res)
       })
       .catch(err => {
@@ -43,7 +48,7 @@ export const Register = () => {
   }
 
   return (
-    <main className="container has-table-of-contents page-brand">
+    <AuthLayout>
         <form action={makeLogin}>
           <fieldset>
             <label>
@@ -74,11 +79,11 @@ export const Register = () => {
 
         <button
           aria-busy={loading}
-          aria-label={loading ? "Fazendo login…" : "Login"}
+          aria-label={loading ? "Fazendo cadastro" : "Cadastrar"}
           type="submit">
-            {loading ? "Fazendo login…" : "Login"}
+            {loading ? "Fazendo cadastro" : "Cadastrar"}
         </button>
       </form>
-    </main>
+    </AuthLayout>
   )
 }
