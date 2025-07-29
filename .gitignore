@@ -20,3 +20,5 @@ target/
 *.sqlite-*
 
 frontend/build
+
+.env
