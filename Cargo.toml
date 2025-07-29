@@ -5,12 +5,12 @@ name = "encurta-ai"
 version = "0.1.0"
 edition = "2021"
 publish = false
-default-run = "encurta_ai-cli"
+default-run = "encurta_ai"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [workspace.dependencies]
-loco-rs = { version = "0.15", features = ["testing"] }
+loco-rs = { version = "0.16", features = ["testing"] }
 
 [dependencies]
 loco-rs = { workspace = true  }
@@ -39,7 +39,7 @@ axum-extra = { version = "0.10", features = ["form"] }
 sha256 = "1.6.0"
 
 [[bin]]
-name = "encurta_ai-cli"
+name = "encurta_ai"
 path = "src/bin/main.rs"
 required-features = []
 
