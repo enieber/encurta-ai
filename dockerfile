@@ -1,24 +1,24 @@
-FROM rust:1.88.0-slim as builder
+FROM clux/muslrust:stable AS chef
+USER root
+RUN cargo install cargo-chef
+WORKDIR /app
 
-WORKDIR /usr/src/
+FROM chef AS planner
+COPY Cargo.toml Cargo.lock ./
+COPY src src/
+COPY config config/
+COPY migration migration/
+RUN cargo chef prepare --recipe-path recipe.json
 
-COPY . .
+FROM chef AS builder
+WORKDIR /app
+COPY --from=planner /app/recipe.json recipe.json
+RUN cargo chef cook --release --target x86_64-unknown-linux-musl --recipe-path recipe.json
 
-RUN rustup target add x86_64-unknown-linux-musl && \
-    apt update && \
-    apt install -y musl-tools musl-dev && \
-    update-ca-certificates
-
-
-RUN apt-get update && apt-get install -y curl ca-certificates
-
-# Install Node.js using the latest available version from NodeSource.
-# In production, replace "setup_current.x" with a specific version
-# to avoid unexpected breaking changes in future releases.
-RUN curl -fsSL https://deb.nodesource.com/setup_current.x | bash - && \
-    apt-get install -y nodejs
-RUN cd frontend && npm install && npm run build
-
+COPY Cargo.toml Cargo.lock ./
+COPY src src/
+COPY config config/
+COPY migration migration/
 
 RUN adduser \
     --disabled-password \
@@ -31,20 +31,29 @@ RUN adduser \
 
 RUN cargo build --target x86_64-unknown-linux-musl --release
 
-FROM scratch
+FROM node:18-alpine AS front-builder
+WORKDIR /app
+COPY frontend/package*.json ./
+RUN npm ci --only=production && npm cache clean --force
 
-WORKDIR /usr/app
+COPY frontend ./
+RUN npm run build
+
+# Limpar node_modules após build
+RUN rm -rf node_modules
+
+FROM scratch
+WORKDIR /app
 
 COPY --from=builder /etc/passwd /etc/passwd
 COPY --from=builder /etc/group /etc/group
 
 USER detetive:detetive
 
-COPY --from=builder /usr/src/frontend/dist frontend/dist
-COPY --from=builder /usr/src/frontend/dist/index.html frontend/dist/index.html
-COPY --from=builder /usr/src/config config
-COPY --from=builder /usr/src/target/x86_64-unknown-linux-musl/release/encurta_ai encurta_ai
+COPY --from=front-builder /app/dist frontend/dist
 
-expose 5150
 
-ENTRYPOINT ["/usr/app/encurta_ai"]
+COPY --from=builder /app/config config
+COPY --from=builder /app/target/x86_64-unknown-linux-musl/release/encurta_ai encurta_ai
+
+ENTRYPOINT ["/app/encurta_ai"]

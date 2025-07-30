@@ -1,7 +1,7 @@
 services:
   database:
     container_name: encurta-ai_db
-    image: postgres:17.5-alpine3.22
+    image: postgres:17.5
     restart: always
     environment:
       - POSTGRES_USER=user
@@ -11,14 +11,14 @@ services:
       - POSTGRES_PASSWORD=pass
     volumes:
       - postgres-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
     networks:
       - database
-    
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready", "-d", "db_prod"]
+      interval: 30s
+      timeout: 60s
+      retries: 5
+      start_period: 80s      
   app:
     container_name: encurta-ai_app
     build:
@@ -28,12 +28,12 @@ services:
       - ./config:/usr/app/config
     ports:
       - "5150:5150"
-    command: start -s  
     env_file:
       - .env
     depends_on:
       database:
         condition: service_healthy
+    command: start -s -e production      
     networks:
       - database
       - app

@@ -1261,7 +1261,7 @@ checksum = "34aa73646ffb006b8f5147f3dc182bd4bcb190227ce861fc4a4844bf8e3cb2c0"
 
 [[package]]
 name = "encurta-ai"
-version = "0.1.0"
+version = "0.0.1"
 dependencies = [
  "async-trait",
  "axum",
@@ -2430,7 +2430,7 @@ checksum = "32a282da65faaf38286cf3be983213fcf1d2e2a58700e808f83f4ea9a4804bc0"
 
 [[package]]
 name = "migration"
-version = "0.1.0"
+version = "0.0.1"
 dependencies = [
  "async-std",
  "loco-rs",
