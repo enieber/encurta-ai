@@ -56,4 +56,6 @@ COPY --from=front-builder /app/dist frontend/dist
 COPY --from=builder /app/config config
 COPY --from=builder /app/target/x86_64-unknown-linux-musl/release/encurta_ai encurta_ai
 
+EXPOSE 5150
+
 ENTRYPOINT ["/app/encurta_ai"]
