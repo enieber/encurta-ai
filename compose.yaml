@@ -1,0 +1,45 @@
+services:
+  database:
+    container_name: encurta-ai_db
+    image: postgres:17.5
+    restart: always
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_DB=db
+      - POSTGRES_PASSWORD=pass
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    networks:
+      - database
+    healthcheck:
+      test: "CMD-SHELL pg_isready -U user -d db"
+      interval: 5s
+      timeout: 5s
+      start_period: 30s  
+  app:
+    container_name: encurta-ai_app
+    build:
+      dockerfile: dockerfile
+      context: .
+    volumes:
+      - ./config:/usr/app/config
+    ports:
+      - 5150:5150
+    command: ["start", "-s", "-e", "production"] 
+    env_file:
+      - .env
+    networks:
+      - database
+      - app
+
+volumes:
+  postgres-data:
+
+networks:
+  app:
+    name: app
+  database:
+    driver: bridge
+
