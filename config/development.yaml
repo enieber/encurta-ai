@@ -51,16 +51,17 @@ mailer:
     # Enable/Disable smtp mailer.
     enable: true
     # SMTP server host. e.x localhost, smtp.gmail.com
-    host: localhost
+    host: {{ get_env(name="SMTP_HOST", default="mail.server.app") }}
     # SMTP server port
-    port: 1025
+    port: {{ get_env(name="SMTP_PORT", default=587) }}
     # Use secure connection (SSL/TLS).
-    secure: false
-    # auth:
-    #   user:
-    #   password:
+    secure: true
+    auth:
+      user: {{ get_env(name="SMTP_USER", default="bendo01@server.app") }}
+      password: {{ get_env(name="SMTP_PASSWORD", default="0000000") }}
     # Override the SMTP hello name (default is the machine's hostname)
-    # hello_name:
+    hello_name: {{ get_env(name="SMTP_SENDER", default="localhost") }}
+
 
 # Initializers Configuration
 # initializers:

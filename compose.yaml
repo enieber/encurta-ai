@@ -24,7 +24,7 @@ services:
       dockerfile: dockerfile
       context: .
     volumes:
-      - ./config:/usr/app/config
+      - ./config:/app/config
     ports:
       - 5150:5150
     command: ["start", "-s", "-e", "production"] 

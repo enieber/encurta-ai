@@ -5,7 +5,7 @@ use loco_rs::prelude::*;
 use serde::{Deserialize, Serialize};
 use axum::debug_handler;
 
-use crate::models::{_entities::routers::{self, ActiveModel, Entity, Model}, routers::RoutersParams};
+use crate::models::{_entities::routers::{self}, routers::RoutersParams};
 
 #[derive(Clone, Debug, Serialize, Deserialize)]
 pub struct Params {
