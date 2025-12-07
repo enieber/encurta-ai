@@ -34,7 +34,7 @@ RUN cargo build --target x86_64-unknown-linux-musl --release
 FROM node:18-alpine AS front-builder
 WORKDIR /app
 COPY frontend/package*.json ./
-RUN npm ci --only=production && npm cache clean --force
+RUN npm ci && npm cache clean --force
 
 COPY frontend ./
 RUN npm run build
