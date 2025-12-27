@@ -58,4 +58,4 @@ COPY --from=builder /app/target/x86_64-unknown-linux-musl/release/encurta_ai enc
 
 EXPOSE 5150
 
-ENTRYPOINT ["/app/encurta_ai", "start"]
+ENTRYPOINT ["/app/encurta_ai", "start", "-s", "-e", "production"]
