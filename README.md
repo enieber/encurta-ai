@@ -8,5 +8,7 @@ required:
   - docker (podman)
   - docker-compose (podman-compose)
 
-`docker compose up -d`
+- copy env file with: `cp .env.sample .env`
+- set values from .env
+- run image with docker compose: `docker compose up -d`
 

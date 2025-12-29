@@ -20,16 +20,20 @@ services:
       start_period: 30s  
   app:
     container_name: encurta-ai_app
+    image: ghcr.io/enieber/encurta-ai:latest
     build:
       dockerfile: dockerfile
       context: .
-    volumes:
-      - ./config:/app/config
     ports:
       - 5150:5150
-    command: ["start", "-s", "-e", "production"] 
-    env_file:
-      - .env
+    environment:
+      - ENV=$ENV
+      - DATABASE_URL=$DATABASE_URL
+      - SMTP_HOST=$SMTP_HOST
+      - SMTP_PORT=$SMTP_PORT
+      - SMTP_USER=$SMTP_USER
+      - SMTP_PASSWORD=$SMTP_PASSWORD
+      - SMTP_SENDER=$SMTP_SENDER
     networks:
       - database
       - app
